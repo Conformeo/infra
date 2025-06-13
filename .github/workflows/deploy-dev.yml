@@ -1,0 +1,11 @@
+name: Deploy infra to dev
+on:
+  push:
+    branches: [main]
+    paths: ["cluster/**"]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # + setup kubectl / kustomize (voir README)
