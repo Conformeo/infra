@@ -10,7 +10,7 @@ on:
     paths:
       - ".github/workflows/**"
       - "cluster/**"
-  workflow_dispatch:        # lancement manuel
+  workflow_dispatch:        # lancement manuel du workflow
 
 jobs:
   lint-yaml:
@@ -32,3 +32,4 @@ jobs:
           sudo mv kustomize /usr/local/bin/kustomize
       - name: Build overlays (dev)
         run: kustomize build cluster/overlays/dev
+
