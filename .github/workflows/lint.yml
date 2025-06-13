@@ -1,0 +1,34 @@
+name: Lint YAML & Kustomize
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/**"
+      - "cluster/**"
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "cluster/**"
+  workflow_dispatch:        # lancement manuel
+
+jobs:
+  lint-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install yamllint
+        run: sudo apt-get update -y && sudo apt-get install -y yamllint
+      - name: Run yamllint
+        run: yamllint -s cluster/ .github/workflows/
+
+  kustomize-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install kustomize
+        run: |
+          curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash
+          sudo mv kustomize /usr/local/bin/kustomize
+      - name: Build overlays (dev)
+        run: kustomize build cluster/overlays/dev
