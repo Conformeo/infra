@@ -9,14 +9,15 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install tools
+      - name: Install kubectl & kustomize
         run: |
           curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash
           sudo mv kustomize /usr/local/bin/
-          sudo apt-get update && sudo apt-get install -y kubectl
+          sudo apt-get update -y && sudo apt-get install -y kubectl
 
       - name: Set kubeconfig
         env:
@@ -25,6 +26,6 @@ jobs:
           mkdir -p $HOME/.kube
           echo "$KUBE_CONFIG" | base64 -d > $HOME/.kube/config
 
-      - name: Apply overlay
+      - name: Deploy overlay dev
         run: |
           kustomize build cluster/overlays/dev | kubectl apply -f -
